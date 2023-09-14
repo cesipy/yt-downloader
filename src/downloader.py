@@ -13,5 +13,5 @@ class Downloader:
             .desc()\
             .first()\
             .download(output_path=self.destination_dir)
-
-        print(result)
+        # return path of downloaded video
+        return result
