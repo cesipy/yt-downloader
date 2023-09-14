@@ -28,6 +28,7 @@ def handle_cli():
         print(f"[red]Incorrect usage![/red] Usage: [green]python {sys.argv[0]} <url> ( additional <output path> )[/green]")
         sys.exit(1)
 
+
 def handle_arguments(url: str, path: str) -> Downloader:
     """
     handles the url and path and returns a downloader object
@@ -47,6 +48,7 @@ def handle_arguments(url: str, path: str) -> Downloader:
     else:
         print(f"[red]Incorrect URL:[/red] {url}")
         sys.exit(1)
+
 
 def valid_url(url: str) -> bool:
     """
