@@ -1,7 +1,9 @@
 import sys
 import urllib.parse
-import downloader
 import os
+from rich.console import Console
+from rich.prompt import Prompt
+from downloader import Downloader
 
 
 def run_download(url, path):
@@ -10,26 +12,26 @@ def run_download(url, path):
 
 
 def handle_cli():
-    if len(sys.argv) == 2:
+    if len(sys.argv) == 1:
+        rich_text_interface()
+        sys.exit(0)
+    elif len(sys.argv) == 2:
         url = sys.argv[1]
         dl = handle_arguments(url, "downloaded_videos")
         return dl
-
     elif len(sys.argv) == 3:
         url = sys.argv[1]
         custom_path = sys.argv[2]
         dl = handle_arguments(url, custom_path)
         return dl
-
     else:
-        print(f"incorrect usage! usage: python {sys.argv[0]} <url> ( additional <output path> )")
+        print(f"[red]Incorrect usage![/red] Usage: [green]python {sys.argv[0]} <url> ( additional <output path> )[/green]")
         sys.exit(1)
 
-
-def handle_arguments(url: str, path: str) -> downloader.Downloader:
+def handle_arguments(url: str, path: str) -> Downloader:
     """
     handles the url and path and returns a downloader object
-    
+
     :return: dl downloader object
     """
     is_valid = valid_url(url)
@@ -37,16 +39,14 @@ def handle_arguments(url: str, path: str) -> downloader.Downloader:
     if is_valid:
         if os.path.exists(path) and os.path.isdir(path):
             # create downloader object
-            dl = downloader.Downloader(url, path)
+            dl = Downloader(url, path)
             return dl
-
         else:
-            print(f"Custom path does not exist or is not a directory: {path}")
+            print(f"[red]Custom path does not exist or is not a directory:[/red] {path}")
             sys.exit(1)
     else:
-        print(f"Incorrect url: {url}")
+        print(f"[red]Incorrect URL:[/red] {url}")
         sys.exit(1)
-
 
 def valid_url(url: str) -> bool:
     """
@@ -62,6 +62,19 @@ def valid_url(url: str) -> bool:
             return False
     except ValueError:
         return False
+
+
+def rich_text_interface():
+    console = Console()
+    console.print("[bold green]YouTube Downloader[/bold green]")
+    url = Prompt.ask("[bold]Enter the YouTube video URL:[/bold]")
+    output_path = Prompt.ask(
+        "[bold]Enter the output path (or press Enter for 'downloaded_videos'): [/bold]", default="downloaded_videos")
+    run_download(url, output_path)
+
+    console.print(f"[cyan]Downloading video from URL:[/cyan] [blue]{url}[/blue]")
+
+    console.print(f"[bold green]Video downloaded to:[/bold green] [blue]{output_path}[/blue]\n")
 
 
 def main():
