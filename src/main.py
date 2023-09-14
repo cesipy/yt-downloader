@@ -5,54 +5,48 @@ import os
 
 
 def handle_cli_arguments():
-    global dl
-    length_argv: int = len(sys.argv)
-    print(length_argv)
+    length_argv = len(sys.argv)
 
-    # only url provided
+    # Correct number of arguments: url only
     if length_argv == 2:
-        url: str = sys.argv[1]
-        is_valid: bool = valid_argument(url)
+        url = sys.argv[1]
+        is_valid = valid_argument(url)
 
         if is_valid:
-            dir = os.path.relpath("../downloaded_videos")
-            dl = downloader.Downloader(url, dir)
-
+            # path = os.path.relpath("downloaded_videos", "yt-downloader")
+            path = "downloaded_videos"
+            dl = downloader.Downloader(url, path)
+            return dl
         else:
-            print(f"incorrect url: {url}")
-            sys.exit()
+            print(f"Incorrect url: {url}")
+            sys.exit(1)
 
-    # url and path provided
-    if length_argv == 3:
-        url: str = sys.argv[1]
-        is_valid: bool = valid_argument(url)
-        path_to_check = sys.argv[2]  # custom dirs
-
-        if os.path.exists(path_to_check):
-            dir = os.path.relpath(path_to_check)
-        else:
-            dir = os.path.relpath("../downloaded_videos")
+    # Correct number of arguments: url and custom path
+    elif length_argv == 3:
+        url = sys.argv[1]
+        is_valid = valid_argument(url)
+        custom_path = sys.argv[2]
 
         if is_valid:
-            dl = downloader.Downloader(url, dir)
-
+            if os.path.exists(custom_path) and os.path.isdir(custom_path):
+                dl = downloader.Downloader(url, custom_path)
+                return dl
+            else:
+                print(f"Custom path does not exist or is not a directory: {custom_path}")
+                sys.exit(1)
         else:
-            print(f"incorrect url: {url}")
+            print(f"Incorrect url: {url}")
+            sys.exit(1)
 
-    # incorrect usage
+    # Incorrect usage
     else:
-        print(f"incorrect usage! usage: python {sys.argv[0]} <url to video> ( <destination directory> )")
-        sys.exit()
-
-    return dl
+        print(f"Incorrect usage! Usage: python {sys.argv[0]} <url to video> ( <destination directory> )")
+        sys.exit(1)
 
 
-def valid_argument(url: str) -> bool:
+def valid_argument(url):
     try:
-        # Attempt to parse the URL
         parsed_url = urllib.parse.urlparse(url)
-
-        # Check if the scheme (e.g., http, https) and netloc (e.g., domain) are not empty
         if parsed_url.scheme and parsed_url.netloc:
             return True
         else:
@@ -65,4 +59,6 @@ def main():
     dl = handle_cli_arguments()
     dl.download()
 
-main()
+
+if __name__ == "__main__":
+    main()
