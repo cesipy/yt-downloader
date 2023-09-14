@@ -11,7 +11,15 @@ from rich.panel import Panel
 console = Console()
 
 
-def run_download(url, path):
+def run_download(url: str, path: str) -> str:
+    """
+    downloads the video of a given url and path.
+    returns the path of the downloaded file (if successful).
+
+    :param url: url of youtube video
+    :param path: path to save the downloaded video to
+    :return: path of the downloaded file.
+    """
     dl = handle_arguments(url, path)
     result = dl.download()
 
@@ -19,18 +27,25 @@ def run_download(url, path):
 
 
 def handle_cli():
+    # switch to terminal interface mode
     if len(sys.argv) == 1:
         rich_text_interface()
         sys.exit(0)
+
+    # url to video is provided
     elif len(sys.argv) == 2:
         url = sys.argv[1]
         dl = handle_arguments(url, "downloaded_videos")
         return dl
+
+    # url and custom path are provided
     elif len(sys.argv) == 3:
         url = sys.argv[1]
         custom_path = sys.argv[2]
         dl = handle_arguments(url, custom_path)
         return dl
+
+    # incorrect usage
     else:
         console.print(f"[red]Incorrect usage![/red] Usage: [green]python {sys.argv[0]} <url> ( additional <output path> )[/green]")
         sys.exit(1)
@@ -74,6 +89,9 @@ def valid_url(url: str) -> bool:
 
 
 def rich_text_interface():
+    """
+    simple interface for the youtube downloader.
+    """
     os.system('cls' if os.name == 'nt' else 'clear')
 
     console.print(Panel("[bold green]YouTube Downloader[/bold green]", title="Welcome", border_style="green"))
