@@ -13,6 +13,7 @@ setup(
         "pytube",
         "pyinstaller",
         "rich",
+        "pyinstaller",
         # place for other packages
     ],
 )
