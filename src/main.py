@@ -5,6 +5,7 @@ import os
 
 
 def handle_cli_arguments():
+    global dl
     length_argv: int = len(sys.argv)
     print(length_argv)
 
@@ -19,6 +20,7 @@ def handle_cli_arguments():
 
         else:
             print(f"incorrect url: {url}")
+            sys.exit()
 
     # url and path provided
     if length_argv == 3:
@@ -39,8 +41,10 @@ def handle_cli_arguments():
 
     # incorrect usage
     else:
-        print(f"incorrect usage! usage: python {sys.argv[0]} <url to video> (< destination directory")
+        print(f"incorrect usage! usage: python {sys.argv[0]} <url to video> ( <destination directory> )")
         sys.exit()
+
+    return dl
 
 
 def valid_argument(url: str) -> bool:
@@ -58,6 +62,7 @@ def valid_argument(url: str) -> bool:
 
 
 def main():
-    handle_cli_arguments()
+    dl = handle_cli_arguments()
+    dl.download()
 
-
+main()
