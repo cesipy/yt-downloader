@@ -4,10 +4,10 @@ import os
 from rich.console import Console
 from rich.prompt import Prompt
 from downloader import Downloader
-
 from rich.table import Table
 from rich.panel import Panel
 
+# global console for the rich output
 console = Console()
 
 
